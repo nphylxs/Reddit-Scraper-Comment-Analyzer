@@ -1,5 +1,5 @@
 import os
-from ai_functions import reddit_scraper, analyser, reader
+from functions import reddit_scraper, analyser, reader
 
 def main():
     product = input("Product Name: ").lower().strip()
