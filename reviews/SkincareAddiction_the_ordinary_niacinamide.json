@@ -1,0 +1,31 @@
+{
+  "product_name": "The Ordinary Niacinamide",
+  "subreddit": "SkincareAddiction",
+  "positives": [
+    "can increase ceramide synthesis",
+    "aid in decreasing PIH / PIE",
+    "reduce sebum production",
+    "helps with hyperpigmentation",
+    "sinks into the skin fast",
+    "has a positive effect on acne-poor skin"
+  ],
+  "negatives": [
+    "can irritate the skin",
+    "can cause breakouts",
+    "can lead to dry, red skin",
+    "can cause stinging and burning",
+    "can cause itching",
+    "can be too strong for sensitive skin"
+  ],
+  "best_for": [
+    "acne-prone skin",
+    "hyperpigmentation",
+    "combination skin",
+    "sensitive skin"
+  ],
+  "not_recommended_for": [
+    "very sensitive skin",
+    "skin with a history of severe reactions"
+  ],
+  "ratio": 0.83
+}
