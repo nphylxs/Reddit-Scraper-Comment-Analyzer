@@ -30,3 +30,6 @@ Then, to analyze, it checks if the analysis has already been done by looking at 
 
 Finally, Groq's output is given out to the terminal. 
 
+You have to enter keys into the .env file for the program to run. 
+
+
