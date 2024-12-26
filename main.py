@@ -1,5 +1,5 @@
 import os
-from functions import reddit_scraper, analyser, reader
+from functions import reddit_scraper, analyser, reader, converter
 
 def main():
     product = input("Product Name: ").lower().strip()
@@ -31,8 +31,9 @@ def main():
     for sub in subs:
         saving = f"reviews/{sub}_{product.replace(' ', '_')}.json"
         if not os.path.exists(saving):
-            analyser(product, sub)
-        print(reader(saving))
+            data = analyser(product, sub)
+            converter(data, sub, product)
+        reader(saving)
             
 if __name__ == "__main__":
     main()
