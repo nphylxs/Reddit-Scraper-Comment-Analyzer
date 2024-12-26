@@ -67,11 +67,25 @@ def analyser(product, sub):
     except json.JSONDecodeError:
         print(f"Couldn't convert the output into JSON. Here's the output: \n{filtered_text}")
 
-#function to read json file
+#function to read and print json file
 def reader(address):
     with open(address, "r") as f:
-        data = json.load(f)
-    return data
+        review = json.load(f)
+    print(review['product_name'])
+    print(f"r/{review['subreddit']}")
+    print("Positives: ")
+    for positive in review['positives']:
+        print(positive)
+    print("Negatives: ")
+    for negative in review['negatives']:
+        print(negative)
+    print("Best for: ")
+    for point in review['best_for']:
+        print(point)
+    print("Not recommended for: ")
+    for point in review['not_recommended_for']:
+        print(point)
+    print(f"Ratio of positive comments to negative comments: {review['ratio']}")
 
 #function to check if comments have the relevant words
 def relevancy(text, words: list[str]):
