@@ -55,7 +55,6 @@ def analyser(product, sub):
     )
     #receiving output from groq
     content = chat_completion.choices[0].message.content
-    print(content)
     #filtering the output
     start = content.find("{")
     end = content.find("}") + 1
