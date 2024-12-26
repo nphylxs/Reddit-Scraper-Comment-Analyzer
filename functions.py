@@ -20,12 +20,11 @@ reddit = praw.Reddit(
 )
 #the main analysing and file saving function
 from groq import Groq
+import groq
 def analyser(product, sub):
     #to access groq
     filename = f"data/{sub}_{product.replace(' ', '_')}.json"
-    client = Groq(
-        api_key= os.environ.get("groq_key"),
-    )
+    
     #the prompt that specifies everything to groq
     prompt =(
         f"I am going to send you a json file of 10 reddit posts, their title, score, and comments."
@@ -40,13 +39,26 @@ def analyser(product, sub):
         "  'negatives': ['<negative_point_1>', '<negative_point_2>', ...],\n"
         "  'best_for': ['<skin_concern_1>', '<skin_concern_2>', ...],\n"
         "  'not_recommended_for': ['<reason_1>', '<reason_2>', ...]\n"
-        "  'ratio': (positive to negative comments ratio)"
+        "  'ratio': (positive to negative comments ratio in decimal)"
         "} \n"
         "Ensure the output is well-structured as a Python dictionary. It MUST be a valid JSON and there should be no extraneous text. Thank you!"
     )
     #loading the data into memory
     with open(filename, "r") as f:
         data = json.load(f)
+    try:
+        answer = ai_portion(prompt, data)
+    except groq.BadRequestError:
+        selected_data = [item['comments'][:10] for item in data]
+        answer = ai_portion(prompt, selected_data)
+    return answer
+
+def ai_portion(prompt, data):
+    #setting up
+    client = Groq(
+        api_key= os.environ.get("groq_key"),
+    )
+    #sending the prompt
     chat_completion = client.chat.completions.create(
         messages=[
             {
@@ -59,7 +71,7 @@ def analyser(product, sub):
     #receiving output from groq
     content = chat_completion.choices[0].message.content
     return content
-    
+
 #filtering the output
 def converter(content, sub, product):
     start = content.find("{")
@@ -67,7 +79,7 @@ def converter(content, sub, product):
     content = content[start:end]
     for i in range(len(content) - 1):
         if content[i] == "'":
-            if content[i - 1].isalpha() and content[i + 1].isalpha():
+            if (content[i - 1].isalpha() and content[i + 1].isalpha()) or (content[i-1] == "\\"):
                 continue
             else:
                 content = content[:i] + '"' + content[i+1:]
