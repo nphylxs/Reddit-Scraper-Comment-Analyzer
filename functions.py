@@ -1,8 +1,11 @@
 import os
+import re
 import praw
 import json
 import nltk
 from nltk.corpus import stopwords
+nltk.download('stopwords')
+nltk.download('punkt_tab')
 from nltk.tokenize import word_tokenize
 from dotenv import load_dotenv
 load_dotenv()
@@ -55,17 +58,26 @@ def analyser(product, sub):
     )
     #receiving output from groq
     content = chat_completion.choices[0].message.content
-    #filtering the output
+    return content
+    
+#filtering the output
+def converter(content, sub, product):
     start = content.find("{")
     end = content.find("}") + 1
-    filtered_text = content[start:end].replace("'",'"')
+    content = content[start:end]
+    for i in range(len(content) - 1):
+        if content[i] == "'":
+            if content[i - 1].isalpha() and content[i + 1].isalpha():
+                continue
+            else:
+                content = content[:i] + '"' + content[i+1:]
     try:
-        final = json.loads(filtered_text)
+        final = json.loads(content)
         saving = f"reviews/{sub}_{product.replace(' ', '_')}.json"
         with open(saving, "w") as f:
             json.dump(final, f, indent= 2)
     except json.JSONDecodeError:
-        print(f"Couldn't convert the output into JSON. Here's the output: \n{filtered_text}")
+        print(f"Couldn't convert the output into JSON. Here's the output: \n{content}")
 
 #function to read and print json file
 def reader(address):
